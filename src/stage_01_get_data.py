@@ -1,12 +1,12 @@
-import argparse 
-import os 
-import shutil 
-import logging 
-from tqdm import tqdm 
+import argparse
+import os
+import shutil
+from tqdm import tqdm
+import logging
 from src.utils.common import read_yaml, create_directories, unzip_file
-from src.utils.data_mgmt import validate_image 
-import random 
-import urllib.request as req 
+from src.utils.data_mgmt import validate_image
+import random
+import urllib.request as req
 
 
 STAGE="GET_DATA"# change the stage name 
@@ -22,9 +22,12 @@ def main(config_path):
     config=read_yaml(config_path)
     URL=config["data"]["source_url"]
     local_dir=config["data"]["local_dir"]
+
     create_directories([local_dir])
+
     data_file=config["data"]["data_file"]
     data_file_path=os.path.join(local_dir,data_file)
+
     if not os.path.isfile(data_file_path):
         logging.info("download started......")
         filename, headers=req.urlretrieve(URL, data_file_path)
@@ -43,19 +46,19 @@ def main(config_path):
 
 
 
-    if __name__=='__main__':
-        args=argparse.ArgumentParser()
-        args.add_argument("--config","-c", default="configs/config.yaml")
-        parsed_args=args.parse_args()
+if __name__=='__main__':
+    args=argparse.ArgumentParser()
+    args.add_argument("--config","-c", default="configs/config.yaml")
+    parsed_args=args.parse_args()
 
-        try:
-            logging.info("\n************************")
-            logging.info(f">>>>> stage {STAGE} started <<<<<<<<")
-            main(config_path=parsed_args.config)
-            logging.info(f">>>>stage {STAGE} completed!<<<<<<\n")
-        except Exception as e: 
-            logging.exception(e)
-            raise e 
+    try:
+        logging.info("\n************************")
+        logging.info(f">>>>> stage {STAGE} started <<<<<<<<")
+        main(config_path=parsed_args.config)
+        logging.info(f">>>>stage {STAGE} completed!<<<<<<\n")
+    except Exception as e: 
+        logging.exception(e)
+        raise e 
         
 
 
